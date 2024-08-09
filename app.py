@@ -30,6 +30,7 @@ with st.sidebar.form("user_input_form", clear_on_submit=True, border=False):
 
 st.subheader("Image Generation Results")
 st.write("Below are the images generated based on your prompts. You can view and download each image by clicking the download button below.")
+st.markdown("<br>", unsafe_allow_html=True)
 
 # After submitted save image data into session state
 if submitted:
@@ -54,7 +55,9 @@ if submitted:
         # -----------------------------------------------------
         
         st.session_state.generated_images = image_urls
-        st.success(f'Image generation completed successfully!')
+        success_msg = st.success(f'Image generation completed successfully!')
+        time.sleep(3)
+        success_msg.empty()
         
 if "generated_images" in st.session_state:
     # Redefine images url in session state
