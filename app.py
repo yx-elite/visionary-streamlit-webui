@@ -1,7 +1,7 @@
 import streamlit as st
 import time  # Import time to simulate image generation delay
 
-'''Sidebar setup'''
+# '''Sidebar setup'''
 
 st.sidebar.title("Visionary Diffusion")
 st.sidebar.write("This app generates images based on the prompts you provide.")
@@ -24,7 +24,7 @@ with st.sidebar.form("user_input_form", clear_on_submit=True, border=False):
     submitted = st.form_submit_button("Generate Images")
 
 
-'''Main page content setup'''
+# '''Main page content setup'''
 
 st.subheader("Image Generation Results")
 st.write("Below are the images generated based on your prompts. You can view and download each image by clicking the download button below.")
@@ -52,13 +52,18 @@ if submitted:
             end_idx = min(start_idx + 2, num_images)
 
             for i in range(start_idx, end_idx):
+                # Check the file extension for download
+                file_extension = image_urls[i].split('.')[-1].lower()
+                if file_extension not in ["jpg", "jpeg", "png"]:
+                    file_extension = "png"
+                
                 cols[i - start_idx].image(image_urls[i], use_column_width="auto")   # caption=f"Image {i+1}"
                 cols[i - start_idx].download_button(
                     label="Download Image",
                     data=image_urls[i],
-                    file_name=f"image_{i+1}.png",
-                    mime="image/png",
+                    file_name=f"image_{i+1}.{file_extension}",
+                    mime=f"image/{file_extension}",
                     use_container_width=True
                 )
-    
+
     st.success(f'Image generation completed successfully!')
