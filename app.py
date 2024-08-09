@@ -55,7 +55,6 @@ if submitted:
         
         st.session_state.generated_images = image_urls
         st.success(f'Image generation completed successfully!')
-        print(st.session_state.generated_images)
         
 if "generated_images" in st.session_state:
     # Redefine images url in session state
