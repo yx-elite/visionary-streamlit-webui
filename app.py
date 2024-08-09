@@ -1,5 +1,7 @@
 import streamlit as st
-import time  # Import time to simulate image generation delay
+import requests
+import time 
+from io import BytesIO
 
 # '''Sidebar setup'''
 
@@ -43,8 +45,11 @@ if submitted:
     num_rows = (num_images + 1) // 2 
     
     with st.spinner(f"Generating {num_images} images with '{model_selection}' model."):
+        
+        # ------ CONNECTION TO IMAGE GENERATION BACKEND ------
         # Simulate image generation delay
         time.sleep(3)
+        # -----------------------------------------------------
         
         for row in range(num_rows):
             cols = st.columns(2)
@@ -52,15 +57,18 @@ if submitted:
             end_idx = min(start_idx + 2, num_images)
 
             for i in range(start_idx, end_idx):
+                # Ref - https://onelinerhub.com/python-pillow/how-to-load-an-image-from-url
+                response = requests.get(image_urls[i])
+                image_data = BytesIO(response.content)
                 # Check the file extension for download
                 file_extension = image_urls[i].split('.')[-1].lower()
                 if file_extension not in ["jpg", "jpeg", "png"]:
                     file_extension = "png"
                 
-                cols[i - start_idx].image(image_urls[i], use_column_width="auto")   # caption=f"Image {i+1}"
+                cols[i - start_idx].image(image_data, use_column_width="auto")   # caption=f"Image {i+1}"
                 cols[i - start_idx].download_button(
                     label="Download Image",
-                    data=image_urls[i],
+                    data=image_data,
                     file_name=f"image_{i+1}.{file_extension}",
                     mime=f"image/{file_extension}",
                     use_container_width=True
